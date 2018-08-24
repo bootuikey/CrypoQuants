@@ -3,7 +3,7 @@ import time
 import logging
 
 #
-def judgeifchance(threshold = 0.03,*orderbooks):
+def judgeifchance(threshold = 0.03, crypoName="BTC", *orderbooks):
     maxBid = {'exchangeID':'','maxBid':0,'bidAllCounts':0}
     minAsk = {'exchangeID': '', 'minAsk': 0, 'askAllCounts': 0}
     for orderbook in orderbooks:
@@ -27,12 +27,12 @@ def judgeifchance(threshold = 0.03,*orderbooks):
             else:
                 pass
     chazhi = (maxBid['maxBid'] - minAsk['minAsk']) / minAsk['minAsk']
-    logger.info("愿意出最大价钱的买家是 %s 价格为 %s，最便宜的价格就卖的卖家是 %s 价格为 %s，差价比例为：%s" %(maxBid['exchangeID'], maxBid['maxBid'], minAsk['exchangeID'], minAsk['minAsk'], chazhi))
+    logger.info("愿意出最大价钱买%s的买家是%s价格为%s，最便宜的价格就卖%s的卖家是%s价格为%s，差价比例为:%.2f%%" % (crypoName, maxBid['exchangeID'], maxBid['maxBid'], crypoName, minAsk['exchangeID'], minAsk['minAsk'], chazhi*100))
     if chazhi >= threshold:
-        logger.info("机会来啦！交易所 %s 和交易所 %s 出现了利差！" % (minAsk['exchangeID'], maxBid['exchangeID']))
+        logger.info("机会来啦！交易所%s和交易所%s的%s出现了%.2f%%的利差！" % (minAsk['exchangeID'], maxBid['exchangeID'], crypoName, chazhi*100))
         return True
     else:
-        logger.info("机会没出现，等一下吧！！！！" )
+        logger.info("%s机会没出现，等一下吧！！！！" % crypoName)
         return False
 
 
@@ -47,15 +47,36 @@ bibox = ccxt.bibox({
 })
 while True:
     try:
-        orderbookCoinEx = coinEX.fetch_order_book("BTC/USDT", 5)
-        orderbookZB = zb.fetch_order_book("BTC/USDT", 5)
-        orderbookOkEx = okex.fetch_order_book("BTC/USDT", 5)
-        orderbookBibox = bibox.fetch_order_book("BTC/USDT", 5)
-        orderbookCoinEx['exchangeID'] = 'CoinEx'
-        orderbookZB['exchangeID'] = 'ZB'
-        orderbookOkEx['exchangeID'] = 'OkEx'
-        orderbookBibox['exchangeID'] = 'BiBox'
-        judgeifchance(0.03, orderbookCoinEx, orderbookZB, orderbookOkEx, orderbookBibox)
+        orderbookCoinEx_BCH = coinEX.fetch_order_book("BCH/USDT", 5)
+        orderbookZB_BCH = zb.fetch_order_book("BCH/USDT", 5)
+        orderbookOkEx_BCH = okex.fetch_order_book("BCH/USDT", 5)
+        orderbookBibox_BCH = bibox.fetch_order_book("BCH/USDT", 5)
+        orderbookCoinEx_BCH['exchangeID'] = 'CoinEx'
+        orderbookZB_BCH['exchangeID'] = 'ZB'
+        orderbookOkEx_BCH['exchangeID'] = 'OkEx'
+        orderbookBibox_BCH['exchangeID'] = 'BiBox'
+
+        orderbookCoinEx_ETC = coinEX.fetch_order_book("ETC/USDT", 5)
+        orderbookZB_ETC = zb.fetch_order_book("ETC/USDT", 5)
+        orderbookOkEx_ETC = okex.fetch_order_book("ETC/USDT", 5)
+        orderbookBibox_ETC = bibox.fetch_order_book("ETC/USDT", 5)
+        orderbookCoinEx_ETC['exchangeID'] = 'CoinEx'
+        orderbookZB_ETC['exchangeID'] = 'ZB'
+        orderbookOkEx_ETC['exchangeID'] = 'OkEx'
+        orderbookBibox_ETC['exchangeID'] = 'BiBox'
+
+        orderbookCoinEx_EOS = coinEX.fetch_order_book("EOS/USDT", 5)
+        orderbookZB_EOS = zb.fetch_order_book("EOS/USDT", 5)
+        orderbookOkEx_EOS = okex.fetch_order_book("EOS/USDT", 5)
+        orderbookBibox_EOS = bibox.fetch_order_book("EOS/USDT", 5)
+        orderbookCoinEx_EOS['exchangeID'] = 'CoinEx'
+        orderbookZB_EOS['exchangeID'] = 'ZB'
+        orderbookOkEx_EOS['exchangeID'] = 'OkEx'
+        orderbookBibox_EOS['exchangeID'] = 'BiBox'
+
+        judgeifchance(0.03, "BCH", orderbookCoinEx_BCH, orderbookZB_BCH, orderbookOkEx_BCH, orderbookBibox_BCH)
+        judgeifchance(0.03, "ETC", orderbookCoinEx_ETC, orderbookZB_ETC, orderbookOkEx_ETC, orderbookBibox_ETC)
+        judgeifchance(0.03, "EOS", orderbookCoinEx_EOS, orderbookZB_EOS, orderbookOkEx_EOS, orderbookBibox_EOS)
     except Exception as e:
         logger.error("出现错误：%s" % e)
 
